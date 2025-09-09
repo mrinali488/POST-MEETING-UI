@@ -25,15 +25,4 @@ The UI is located in the `ui` folder and built with React + Tailwind CSS.
 - Make sure CORS is enabled in the backend (already configured).
 - Upload a `.wav` file to see meeting insights and actions in the UI.
 
-## Sample Data
-
-A sample `.wav` file is provided in `data/meetings/spoken_meeting.wav` for testing.
-
-- You can use this file to test the backend and UI upload functionality.
-- Example curl command to test backend directly:
-  ```sh
-  curl -X POST "http://127.0.0.1:8000/ingest_audio" \
-    -F "file=@data/meetings/spoken_meeting.wav" | jq
-  ```
-- In the UI, simply select this file for upload to see the processed output.
 
