@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function ActionItemModal({ actionItems, initialItem, onClose, taskOwners }) {
+export default function ActionItemModal({ actionItems, initialItem, onClose, taskOwners, onActionCreated }) {
   const today = new Date().toISOString().slice(0, 10);
   // Prefer taskOwners if present, else fallback to old logic
   const owners = Array.isArray(taskOwners) && taskOwners.length > 0
@@ -22,7 +22,8 @@ export default function ActionItemModal({ actionItems, initialItem, onClose, tas
     due_date: normalizeDate(base.due_date),
     priority: base.priority || "medium",
     owner: base.owner || (owners[0] || ""),
-    details: base.details || ""
+    details: base.details || "",
+    task_id: base.task_id || ""
   });
   const [loading, setLoading] = React.useState(false);
   const [success, setSuccess] = React.useState(null);
@@ -38,7 +39,7 @@ export default function ActionItemModal({ actionItems, initialItem, onClose, tas
     setLoading(true);
     setSuccess(null);
     setError(null);
-    const idempotency_key = `task-${Date.now()}-${Math.floor(Math.random()*1000)}`;
+    const idempotency_key = form.task_id || `task-${Date.now()}-${Math.floor(Math.random()*1000)}`;
     const payload = {
       title: form.title,
       due: form.due_date,
@@ -57,7 +58,15 @@ export default function ActionItemModal({ actionItems, initialItem, onClose, tas
         const data = await res.json();
         setError(data.error || "Failed to create action");
       } else {
+        const data = await res.json();
         setSuccess("Action created successfully!");
+        if (onActionCreated && data?.raw?.issue_url && form.task_id) {
+          onActionCreated(form.task_id, data.raw.issue_url);
+        }
+        // Close the modal after a short delay for user feedback
+        setTimeout(() => {
+          if (onClose) onClose();
+        }, 500);
       }
     } catch (err) {
       setError(err.message);

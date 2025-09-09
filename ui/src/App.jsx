@@ -95,6 +95,29 @@ export default function App() {
                   initialItem={modalItem}
                   taskOwners={result.task_owners}
                   onClose={() => setShowModal(false)}
+                  onActionCreated={(task_id, issue_url) => {
+                    // Update action_items in result with new issue_url
+                    setResult(prev => {
+                      const update = obj => obj && obj.map(a => a.task_id === task_id ? { ...a, issue_url } : a);
+                      let newResult = { ...prev };
+                      if (newResult.insights?.action_items) {
+                        newResult = {
+                          ...newResult,
+                          insights: {
+                            ...newResult.insights,
+                            action_items: update(newResult.insights.action_items)
+                          }
+                        };
+                      }
+                      if (newResult.action_items) {
+                        newResult = {
+                          ...newResult,
+                          action_items: update(newResult.action_items)
+                        };
+                      }
+                      return newResult;
+                    });
+                  }}
                 />
               )}
             </div>
