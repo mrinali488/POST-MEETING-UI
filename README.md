@@ -25,4 +25,6 @@ The UI is located in the `ui` folder and built with React + Tailwind CSS.
 - Make sure CORS is enabled in the backend (already configured).
 - Upload a `.wav` file to see meeting insights and actions in the UI.
 
+<img width="995" height="854" alt="image" src="https://github.com/user-attachments/assets/55180fc9-5630-4c5a-9116-bd4812087f50" />
+
 
